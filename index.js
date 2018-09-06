@@ -1,10 +1,14 @@
 import * as singleSpa from 'single-spa';
 
-const appName = 'entrada';
+const entradaAppName = 'entrada';
+const entradaLoadingFunction = () => import('./entrada');
+const entradaActivityFunction = location => location.pathname === '/';
+singleSpa.registerApplication(entradaAppName, entradaLoadingFunction, entradaActivityFunction);
 
-const loadingFunction = () => import('./entrada');
+const caixaAppName = 'caixa';
+const caixaLoadingFunction = () => import('./caixa');
+const caixaActivityFunction = location => location.pathname === '/caixa';
+singleSpa.registerApplication(caixaAppName, caixaLoadingFunction, caixaActivityFunction);
 
-const activityFunction = location => location.pathname.startsWith('/');
 
-singleSpa.registerApplication(appName, loadingFunction, activityFunction);
 singleSpa.start();

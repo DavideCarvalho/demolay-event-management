@@ -1,6 +1,9 @@
 entrada/node_modules
 entrada/dist
 entrada/.cache
+caixa/node_modules
+caixa/dist
+caixa/.cache
 node_modules/
 .cache/
 dist/

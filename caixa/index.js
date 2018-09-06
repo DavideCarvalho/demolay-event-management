@@ -1,6 +1,6 @@
 // Add shims and polyfills
 import 'hybrids/shim';
-import './src/entrada/EntradaComponent'
+import './src/caixa/CaixaComponent';
 
 let element;
 let styleElement;
@@ -39,7 +39,7 @@ export function bootstrap(props) {
       styleElement = document.createElement('style');
       styleElement.appendChild(document.createTextNode(style));
       head.appendChild(styleElement);
-      element = document.createElement('app-entrada');
+      element = document.createElement('app-caixa');
       document.body.appendChild(element)
   });
 }
@@ -56,9 +56,7 @@ export function unmount(props) {
   return Promise
     .resolve()
     .then(() => {
-      // document.body.removeChild(element);
       element.parent.removeChild(element);
       styleElement.parent.removeChild(styleElement);
-      // document.head.removeChild(styleElement);
   });
 }
