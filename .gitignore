@@ -1,3 +1,6 @@
 entrada/node_modules
 entrada/dist
 entrada/.cache
+node_modules/
+.cache/
+dist/

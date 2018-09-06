@@ -1,0 +1,11 @@
+{
+  "name": "demolay-event-management",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/DavideCarvalho/demolay-event-management.git",
+  "author": "Davi de Carvalho <davicarvalho96@yahoo.com.br>",
+  "license": "MIT",
+  "dependencies": {
+    "single-spa": "4.0.1"
+  }
+}
