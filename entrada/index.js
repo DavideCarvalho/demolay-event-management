@@ -1,18 +1,22 @@
 // Add shims and polyfills
-import 'hybrids/shim';
-import './src/entrada/EntradaComponent'
+// import 'hybrids/shim';
+// import './src/entrada/EntradaComponent'
+import './src';
 
 let element;
+let fatherElement;
 let styleElement;
 
 const style = `
 html,
 body {
   height: 100%;
-  font-family: sans-serif
+  font-family: sans-serif;
+  overflow: hidden;
 }
 
-body {
+#app {
+  height: 100%;
   display: -ms-flexbox;
   display: flex;
   -ms-flex-align: center;
@@ -20,7 +24,7 @@ body {
   padding-top: 40px;
   padding-bottom: 40px;
   background-color: #f5f5f5;
-  overflow: hidden
+  margin-top: -5%;
 }
 
 app-entrada {
@@ -28,6 +32,7 @@ app-entrada {
   max-width: 330px;
   padding: 15px;
   margin: auto;
+  overflow: hidden
 }
 `
 
@@ -39,8 +44,9 @@ export function bootstrap(props) {
       styleElement = document.createElement('style');
       styleElement.appendChild(document.createTextNode(style));
       head.appendChild(styleElement);
+      let fatherElement = document.getElementById('app')
       element = document.createElement('app-entrada');
-      document.body.appendChild(element)
+      fatherElement.appendChild(element);
   });
 }
 
@@ -56,9 +62,7 @@ export function unmount(props) {
   return Promise
     .resolve()
     .then(() => {
-      // document.body.removeChild(element);
-      element.parent.removeChild(element);
-      styleElement.parent.removeChild(styleElement);
-      // document.head.removeChild(styleElement);
+      fatherElement.removeChild(element);
+      document.head.removeChild(styleElement);
   });
 }

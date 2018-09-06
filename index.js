@@ -1,4 +1,5 @@
 import * as singleSpa from 'single-spa';
+import './navbar';
 
 const entradaAppName = 'entrada';
 const entradaLoadingFunction = () => import('./entrada');
