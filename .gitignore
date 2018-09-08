@@ -7,3 +7,4 @@ caixa/.cache
 node_modules/
 .cache/
 dist/
+.env

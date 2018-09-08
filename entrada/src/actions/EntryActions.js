@@ -1,6 +1,7 @@
 export const CHANGE_ENTRY_STATE = 'CHANGE_ENTRY_STATE';
 export const ADD_NEW_PERSON = 'ADD_NEW_PERSON';
-import axios from 'axios';
+export const CHANGE_PERSON_LIST = 'CHANGE_PERSON_LIST';
+import database from '../firebase';
 
 export const changeEntryState = ({key, value}) => {
   return {
@@ -12,13 +13,31 @@ export const changeEntryState = ({key, value}) => {
   }
 }
 
-export const addNewPerson = ({commandNumber, boughtOnEntry}) =>
-  async (dispatch) => {
-    const response = await axios.post('teste', {commandNumber, boughtOnEntry})
+export const changePersonList = personList => dispatch => {
+  dispatch({
+    type: CHANGE_PERSON_LIST,
+    payload: personList
+  });
+}
+
+export const addNewPerson = ({commandNumber, boughtOnEntry}) => async dispatch => {
+  try {
+    const alreadyExists = await database.ref(`/pessoas/${commandNumber}`).once('value');
+    if (alreadyExists.val()) {
+      throw new Error('already exists');
+    }
+    database.ref(`/pessoas/${commandNumber}`).set({
+      boughtOnEntry
+    });
     dispatch({
       type: ADD_NEW_PERSON,
       payload: {
-        response
+        commandNumber,
+        boughtOnEntry
       }
-    });
+    })
+    return Promise.resolve();
+  } catch (e) {
+    return Promise.reject(e);
   }
+}

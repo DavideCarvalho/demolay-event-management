@@ -4,31 +4,31 @@
 
 "@webcomponents/custom-elements@^1.2.0":
   version "1.2.0"
-  resolved "http://nexus.produbanbr.corp/repository/npm-all/@webcomponents/custom-elements/-/custom-elements-1.2.0.tgz#7fc8da6c8243b15b4f69c74c65dfe2a4996c694c"
+  resolved "https://registry.yarnpkg.com/@webcomponents/custom-elements/-/custom-elements-1.2.0.tgz#7fc8da6c8243b15b4f69c74c65dfe2a4996c694c"
 
 "@webcomponents/shadycss@^1.5.0":
   version "1.5.0"
-  resolved "http://nexus.produbanbr.corp/repository/npm-all/@webcomponents/shadycss/-/shadycss-1.5.0.tgz#109e596027eed04bc5032414c9f094e1aeb9260e"
+  resolved "https://registry.yarnpkg.com/@webcomponents/shadycss/-/shadycss-1.5.0.tgz#109e596027eed04bc5032414c9f094e1aeb9260e"
 
 "@webcomponents/shadydom@^1.2.0":
   version "1.2.0"
-  resolved "http://nexus.produbanbr.corp/repository/npm-all/@webcomponents/shadydom/-/shadydom-1.2.0.tgz#ed3a380f6435360c50cf9f62b67cc702adba0a2f"
+  resolved "https://registry.yarnpkg.com/@webcomponents/shadydom/-/shadydom-1.2.0.tgz#ed3a380f6435360c50cf9f62b67cc702adba0a2f"
 
 "@webcomponents/template@^1.4.0":
   version "1.4.0"
-  resolved "http://nexus.produbanbr.corp/repository/npm-all/@webcomponents/template/-/template-1.4.0.tgz#2ffd4574a5a2b662f0330dbeb40b231244a41c52"
+  resolved "https://registry.yarnpkg.com/@webcomponents/template/-/template-1.4.0.tgz#2ffd4574a5a2b662f0330dbeb40b231244a41c52"
 
 "@webcomponents/webcomponents-platform@^1.0.0":
   version "1.0.0"
-  resolved "http://nexus.produbanbr.corp/repository/npm-all/@webcomponents/webcomponents-platform/-/webcomponents-platform-1.0.0.tgz#8879146380ddbecb8617e322497d59e77c3ff468"
+  resolved "https://registry.yarnpkg.com/@webcomponents/webcomponents-platform/-/webcomponents-platform-1.0.0.tgz#8879146380ddbecb8617e322497d59e77c3ff468"
 
 core-js@^2.5.7:
   version "2.5.7"
-  resolved "http://nexus.produbanbr.corp/repository/npm-all/core-js/-/core-js-2.5.7.tgz#f972608ff0cead68b841a16a932d0b183791814e"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.5.7.tgz#f972608ff0cead68b841a16a932d0b183791814e"
 
 hybrids@1.3.1:
   version "1.3.1"
-  resolved "http://nexus.produbanbr.corp/repository/npm-all/hybrids/-/hybrids-1.3.1.tgz#4dd4bf73ea7c19c8d7a0c270ad0fe48dc99019c3"
+  resolved "https://registry.yarnpkg.com/hybrids/-/hybrids-1.3.1.tgz#4dd4bf73ea7c19c8d7a0c270ad0fe48dc99019c3"
   dependencies:
     "@webcomponents/custom-elements" "^1.2.0"
     "@webcomponents/shadycss" "^1.5.0"

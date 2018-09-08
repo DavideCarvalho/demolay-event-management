@@ -1,23 +1,52 @@
-import { html, define } from 'hybrids'
-
+import { html, define } from 'hybrids';
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
 import styles from './css/bootstrap.js';
 import entradaStyles from './EntradaComponentStyles';
-import { changeEntryState } from '../actions/EntryActions';
+import { changeEntryState, addNewPerson, changePersonList } from '../actions/EntryActions';
 import store from '../store';
 import connect from '../connect';
+import database from '../firebase';
+
+
 
 const changeState = (host, { target }) => {
   store.dispatch(changeEntryState({ key: target.id, value: target.value }));
 }
 
-const enterNewPerson = (commandNumber, boughtOnEntry) => (host, e) => {
+const enterNewPerson = (commandNumber, boughtOnEntry) => async (host, e) => {
   e.preventDefault();
-  console.log(commandNumber, boughtOnEntry);
+  try {
+    await store.dispatch(addNewPerson({commandNumber, boughtOnEntry}));
+    iziToast.success({
+      title: 'Adicionado!',
+      message: `Comanda ${commandNumber} adicionada com sucesso!`,
+      color: 'green'
+    });
+  } catch (e) {
+    if (e.message === 'already exists') {
+      console.log(e.message);
+      iziToast.info({
+        title: 'Já Existe',
+        message: `Já existe uma comanda com o número ${commandNumber}`,
+        color: 'yellow'
+      });
+      return;
+    }
+    iziToast.error({
+      title: 'Erro',
+      message: 'Um erro inesperado aconteceu, por favor tente novamente'
+    });
+  }
 }
 
 const bougthOnEntry = (boughtOnEntry) => (host, { target }) => {
   store.dispatch(changeEntryState({ key: target.id, value: boughtOnEntry }));
 }
+
+database.ref('/pessoas').on('value', person => {
+  store.dispatch(changePersonList(person.val()));
+});
 
 
 const EntradaComponent = {
