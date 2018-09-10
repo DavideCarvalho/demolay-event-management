@@ -4,6 +4,9 @@ entrada/.cache
 caixa/node_modules
 caixa/dist
 caixa/.cache
+comprar/node_modules
+comprar/dist
+comprar/.cache
 node_modules/
 .cache/
 dist/

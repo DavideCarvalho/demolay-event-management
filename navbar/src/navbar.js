@@ -8,10 +8,10 @@ const Navbar = {
     ${styles}
   </style>
   <nav class="navbar navbar-expand navbar-light bg-light">
-    <a class="navbar-brand" href="#">Navbar</a>
+    <a class="navbar-brand" href="#">DEMO</a>
     <div id="navbarNav">
       <ul class="navbar-nav">
-        <li class="nav-item active">
+        <li class="nav-item">
           <a class="nav-link" href="/" onClick=${navigateToUrl}>Entrada</a>
         </li>
         <li class="nav-item">
