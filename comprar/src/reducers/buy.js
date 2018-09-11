@@ -1,10 +1,11 @@
 import { CHANGE_STATE } from '../actions/BuyActions';
 
 const INITIAL_STATE = {
-  sweetQuantity: 0,
+  commandNumber: '',
+  sweetQuantity: '',
   whatToBuy: 'sweet',
   drink: '',
-  drinkQuantity: 0,
+  drinkQuantity: '',
 }
 
 export default (state = INITIAL_STATE, { type, payload }) => {

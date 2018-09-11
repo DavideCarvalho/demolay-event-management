@@ -1,3 +1,5 @@
+import database from '../firebase';
+
 export const CHANGE_STATE = 'CHANGE_STATE';
 
 export const changeEntryState = ({key, value}) => {
@@ -8,4 +10,9 @@ export const changeEntryState = ({key, value}) => {
       value
     }
   }
+}
+
+export const buyStuff = (payload) => async dispatch => {
+  const {commandNumber, ...rest} = payload;
+  database.ref(`/pessoas/${commandNumber}`).set({rest})
 }
