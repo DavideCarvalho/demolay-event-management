@@ -8,7 +8,15 @@ import store from '../store';
 import connect from '../connect';
 import database from '../firebase';
 
-
+const onlyNumbers = (host, e) => {
+  const addedInput = String.fromCharCode(e.which);
+  const currentValue = (e.target.value)
+  const fullValue = `${currentValue}${addedInput}`;
+  if (!Number(fullValue)) {
+    e.preventDefault();
+    return;
+  };
+}
 
 const changeState = (host, { target }) => {
   store.dispatch(changeEntryState({ key: target.id, value: target.value }));
@@ -25,7 +33,6 @@ const enterNewPerson = (commandNumber, boughtOnEntry) => async (host, e) => {
     });
   } catch (e) {
     if (e.message === 'already exists') {
-      console.log(e.message);
       iziToast.info({
         title: 'Já Existe',
         message: `Já existe uma comanda com o número ${commandNumber}`,
@@ -52,7 +59,8 @@ database.ref('/pessoas').on('value', person => {
 const EntradaComponent = {
   _commandNumber: '',
   _boughtOnEntry: false,
-  render: ({_commandNumber, _boughtOnEntry}) => html`
+  _loading: false,
+  render: ( { _commandNumber, _boughtOnEntry, _loading } ) => html`
   <style>
     ${styles}
     ${entradaStyles}
@@ -60,14 +68,14 @@ const EntradaComponent = {
   <form class="form-signin text-center" onsubmit=${enterNewPerson(_commandNumber, _boughtOnEntry)}>
     <h1 class="h3 mb-3 font-weight-normal">Entrada</h1>
     <label for="inputEmail" class="sr-only">Número da comanda</label>
-    <input oninput=${changeState} value=${_commandNumber} id="commandNumber" type="text" id="inputEmail" class="form-control" placeholder="Número da comanda">
+    <input onkeypress=${onlyNumbers} oninput=${changeState} value=${_commandNumber} id="commandNumber" type="text" class="form-control" placeholder="Número da comanda">
     <br />
     <div class="checkbox mb-3">
       <label>
         <input onchange=${bougthOnEntry(!_boughtOnEntry)} type="checkbox" id="boughtOnEntry" value=${_boughtOnEntry}> Comprou na entrada
       </label>
     </div>
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Entrar</button>
+    <button disabled=${_loading} class="btn btn-lg btn-primary btn-block" type="submit">Entrar</button>
   </form>
   `
 }
@@ -79,7 +87,8 @@ const createSimpleCounter = (connectedComandNumber, connectedBougthOnEntry) => {
 }
 const entrada = createSimpleCounter(
   connect(store, ({ entry }) => entry.commandNumber),
-  connect(store, ({ entry }) => entry.boughtOnEntry)
+  connect(store, ({ entry }) => entry.boughtOnEntry),
+  connect(store, ({ entry }) => entry.loading)
 )
 
 define('app-entrada', EntradaComponent);

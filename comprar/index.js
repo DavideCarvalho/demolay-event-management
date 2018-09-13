@@ -8,7 +8,7 @@ let fatherElement;
 let styleElement;
 
 const style = `
-app-entrada {
+app-comprar {
   width: 100%;
   max-width: 330px;
   padding: 15px;
@@ -26,7 +26,7 @@ export function bootstrap(props) {
       styleElement.appendChild(document.createTextNode(style));
       head.appendChild(styleElement);
       let fatherElement = document.getElementById('app')
-      element = document.createElement('app-entrada');
+      element = document.createElement('app-comprar');
       fatherElement.appendChild(element);
   });
 }

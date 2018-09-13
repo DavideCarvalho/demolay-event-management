@@ -6,25 +6,6 @@ let fatherElement;
 let styleElement;
 
 const style = `
-html,
-body {
-  height: 100%;
-  font-family: sans-serif;
-  overflow: hidden;
-}
-
-#app {
-  height: 100%;
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-align: center;
-  align-items: center;
-  padding-top: 40px;
-  padding-bottom: 40px;
-  background-color: #f5f5f5;
-  margin-top: -5%;
-}
-
 app-caixa {
   width: 100%;
   max-width: 330px;
@@ -52,7 +33,6 @@ export function mount(props) {
   return Promise
   .resolve()
   .then(() => {
-    console.log('app mounted')
   })
 }
 

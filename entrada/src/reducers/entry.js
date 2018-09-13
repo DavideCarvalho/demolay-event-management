@@ -1,13 +1,16 @@
-import { CHANGE_ENTRY_STATE, ADD_NEW_PERSON, CHANGE_PERSON_LIST } from '../actions/EntryActions';
+import { CHANGE_ENTRY_STATE, ADD_NEW_PERSON, CHANGE_PERSON_LIST, LOADING } from '../actions/EntryActions';
 
 const INITIAL_STATE = {
   commandNumber: '',
   boughtOnEntry: false,
-  people: {}
+  people: {},
+  loading: false
 }
 
 export default (state = INITIAL_STATE, { type, payload }) => {
   switch (type) {
+    case LOADING:
+      return {...state, loading: payload}
     case CHANGE_ENTRY_STATE:
       return {...state, [payload.key]: payload.value};
     case ADD_NEW_PERSON:

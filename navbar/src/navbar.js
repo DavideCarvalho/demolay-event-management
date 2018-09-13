@@ -15,6 +15,9 @@ const Navbar = {
           <a class="nav-link" href="/" onClick=${navigateToUrl}>Entrada</a>
         </li>
         <li class="nav-item">
+          <a class="nav-link" href="/comprar" onClick=${navigateToUrl}>Comprar</a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link" href="/caixa" onClick=${navigateToUrl}>Caixa</a>
         </li>
       </ul>

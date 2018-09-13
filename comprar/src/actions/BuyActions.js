@@ -1,6 +1,7 @@
 import database from '../firebase';
 
-export const CHANGE_STATE = 'CHANGE_STATE';
+export const CHANGE_STATE = 'CHANGE_STATE'
+export const LOADING = 'LOADING';
 
 export const changeEntryState = ({key, value}) => {
   return {
@@ -12,7 +13,22 @@ export const changeEntryState = ({key, value}) => {
   }
 }
 
-export const buyStuff = (payload) => async dispatch => {
+export const buyProducts = (payload) => async dispatch => {
   const {commandNumber, ...rest} = payload;
-  database.ref(`/pessoas/${commandNumber}`).set({rest})
+  dispatch({
+    type: LOADING,
+    payload: true
+  });
+  try {
+    const response = await database.ref(`/pessoas/${commandNumber}/bag`).push(rest)
+    Promise.resolve(response);
+  }
+  catch (e) {
+    Promise.reject(e);
+  } finally {
+    dispatch({
+      type: LOADING,
+      payload: false
+    });
+  }
 }
