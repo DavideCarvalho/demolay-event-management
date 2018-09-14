@@ -40,6 +40,7 @@ const enterNewPerson = (commandNumber, boughtOnEntry) => async (host, e) => {
       });
       return;
     }
+    console.log(e);
     iziToast.error({
       title: 'Erro',
       message: 'Um erro inesperado aconteceu, por favor tente novamente'

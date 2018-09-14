@@ -25,20 +25,29 @@ export const addNewPerson = ({commandNumber, boughtOnEntry}) => async dispatch =
   dispatch({
     type: LOADING,
     payload: true
-  })
+  });
   try {
     const alreadyExists = await database.ref(`/pessoas/${commandNumber}`).once('value');
     if (alreadyExists.val()) {
       throw new Error('already exists');
     }
+    const personQuantity = await database.ref(`/report/totalPeople`).once('value');
+    let boughtOnEntryQuantity;
+    if (boughtOnEntry) {
+      boughtOnEntryQuantity = await database.ref(`/report/boughtOnEntry`).once('value');
+    }
     await database.ref(`/pessoas/${commandNumber}`).set({
-      boughtOnEntry
+      boughtOnEntry,
+      paid: false
     });
+    database.ref(`/report/totalPeople`).set(Number(personQuantity.val()) + 1);
+    database.ref(`/report/boughtOnEntry`).set(Number(boughtOnEntryQuantity.val()) + 1);
     dispatch({
       type: ADD_NEW_PERSON,
       payload: {
         commandNumber,
-        boughtOnEntry
+        boughtOnEntry,
+        paid: false
       }
     })
     return Promise.resolve();
