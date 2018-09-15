@@ -19,6 +19,7 @@ export const changeState = ({key, value}) => dispatch => {
 export const editBag = () => async (dispatch, getState) => {
   let state = getState();
   const commandNumber = state.cashier.commandNumber;
+  const oldBag = state.cashier.bag;
   const personRef = await database.ref(`/pessoas/${commandNumber}`).once('value');
   const person = personRef.val();
   const personTotalValue = person.total;
@@ -53,22 +54,15 @@ export const editBag = () => async (dispatch, getState) => {
   person.bag = bag;
   database.ref(`/pessoas/${commandNumber}`).set(person);
   database.ref(`/report/totalMoney`).set(newTotal);
-  // state = getState();
-  // const oldTotalValue = state.cashier.totalValue;
-  // const bag = state.cashier.bag;
-  // const productsValue = state.cashier.products;
-  // const boughtOnEntry = state.cashier.boughtOnEntry;
-  // const commandNumber = state.cashier.commandNumber;
-  // if (boughtOnEntry) newTotalValue += 30;
-  // const totalRef = await database.ref(`/report/totalMoney`).once('value');
-  // const total = totalRef.val();
-  // database.ref(`/report/totalMoney`).set(newTotal);
-  // const personRef = await database.ref(`/pessoas/${commandNumber}`).once('value');
-  // let person = personRef.val();
-  // person.total = newTotalValue;
-  // const personBag = person.bag;
-  // const filteredBagByItem = Object.keys(bag).filter((key) => bag[key]);
-  // database.ref(`/pessoas/${commandNumber}`).set(person);
+  for(const key in oldBag) {
+    if (Number(oldBag[key].quantity) !== Number(bag[key].quantity)) {
+      const itemRef = await database.ref(`/report/${key}`).once('value');
+      let itemValue = itemRef.val();
+      itemValue -= Number(oldBag[key].quantity);
+      itemValue += Number(bag[key].quantity);
+      database.ref(`/report/${key}`).set(Number(itemValue));
+    }
+  }
   dispatch({
     type: CHANGE_STATE,
     payload: {
