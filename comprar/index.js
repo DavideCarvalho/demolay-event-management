@@ -21,13 +21,6 @@ export function bootstrap(props) {
   return Promise
     .resolve()
     .then(() => {
-      const head = document.head;
-      styleElement = document.createElement('style');
-      styleElement.appendChild(document.createTextNode(style));
-      head.appendChild(styleElement);
-      let fatherElement = document.getElementById('app')
-      element = document.createElement('app-comprar');
-      fatherElement.appendChild(element);
   });
 }
 
@@ -35,6 +28,13 @@ export function mount(props) {
   return Promise
   .resolve()
   .then(() => {
+    const head = document.head;
+    styleElement = document.createElement('style');
+    styleElement.appendChild(document.createTextNode(style));
+    head.appendChild(styleElement);
+    fatherElement = document.getElementById('app')
+    element = document.createElement('app-comprar');
+    fatherElement.appendChild(element);
   })
 }
 

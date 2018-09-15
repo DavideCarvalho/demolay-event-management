@@ -7,6 +7,8 @@ const BebidasComponent = (connectedDrink, changeState, selectedDrink, onlyNumber
     <option value="suco">Suco</option>
     <option value="refrigerante">Refrigerante</option>
     <option value="cerveja">Cerveja</option>
+    <option value="caipirinha">Caipirinha</option>
+    <option value="caipiroska">Caipiroska</option>
   </select>
   <br />
   <label for="inputEmail" class="sr-only">Quantidade de bebida</label>

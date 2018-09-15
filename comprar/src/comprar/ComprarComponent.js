@@ -56,13 +56,20 @@ const buyStuff = ({commandNumber, whatToBuy, sweetQuantity, drinkQuantity, selec
     payload = {...payload, selectedDrink};
   try {
     const response = await store.dispatch(buyProducts(payload));
-
     iziToast.success({
       title: 'Sucesso',
-      message: 'Compra efetuada com sucesso',
+      message: `Compra efetuada com sucesso na comanda ${commandNumber}`,
       color: 'green'
     });
   } catch (e) {
+    if (e.message === 'não existe') {
+      iziToast.show({
+        title: 'Não existe',
+        message: `A comanda ${commandNumber} não existe`,
+        color: 'red'
+      });
+      return;
+    }
     iziToast.error({
       title: 'Erro',
       message: 'Um erro inesperado aconteceu, por favor, tente novamente',

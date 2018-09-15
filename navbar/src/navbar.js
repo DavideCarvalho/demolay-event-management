@@ -2,6 +2,11 @@ import { html, define } from 'hybrids';
 import { navigateToUrl } from 'single-spa';
 import styles from './css/bootstrap.js';
 
+const changeRoute = (rota) => (host, e) => {
+  e.preventDefault();
+  navigateToUrl(rota)
+}
+
 const Navbar = {
   render: () => html`
   <style>
@@ -12,13 +17,13 @@ const Navbar = {
     <div id="navbarNav">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link" href="/" onClick=${navigateToUrl}>Entrada</a>
+          <a class="nav-link" href="/" onclick=${changeRoute('/')}>Entrada</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/comprar" onClick=${navigateToUrl}>Comprar</a>
+          <a class="nav-link" href="/comprar" onclick=${changeRoute('/comprar')}>Comprar</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/caixa" onClick=${navigateToUrl}>Caixa</a>
+          <a class="nav-link" href="/caixa" onclick=${changeRoute('/caixa')}>Caixa</a>
         </li>
       </ul>
     </div>

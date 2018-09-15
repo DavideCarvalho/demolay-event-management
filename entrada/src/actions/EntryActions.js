@@ -35,13 +35,13 @@ export const addNewPerson = ({commandNumber, boughtOnEntry}) => async dispatch =
     let boughtOnEntryQuantity;
     if (boughtOnEntry) {
       boughtOnEntryQuantity = await database.ref(`/report/boughtOnEntry`).once('value');
+      database.ref(`/report/boughtOnEntry`).set(Number(boughtOnEntryQuantity.val()) + 1);
     }
     await database.ref(`/pessoas/${commandNumber}`).set({
       boughtOnEntry,
       paid: false
     });
     database.ref(`/report/totalPeople`).set(Number(personQuantity.val()) + 1);
-    database.ref(`/report/boughtOnEntry`).set(Number(boughtOnEntryQuantity.val()) + 1);
     dispatch({
       type: ADD_NEW_PERSON,
       payload: {

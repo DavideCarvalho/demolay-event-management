@@ -15,15 +15,34 @@ export const changeEntryState = ({key, value}) => {
 
 export const buyProducts = (payload) => async dispatch => {
   const {commandNumber, ...rest} = payload;
+  const personRef = await database.ref(`/pessoas/${commandNumber}`).once('value');
+  console.log(personRef.val());
+  if (!personRef.val()) {
+    throw new Error('não existe');
+  }
   const itemQuantity = await database.ref(`/report/${rest.item}`).once('value');
   dispatch({
     type: LOADING,
     payload: true
   });
   try {
-    const response = await database.ref(`/pessoas/${commandNumber}/bag`).push(rest)
+    let bagRef = await database.ref(`/pessoas/${commandNumber}/bag`).once('value');
+    let bag = bagRef.val();
+    if (bag) {
+      if (bag[rest.item]){
+        const itemAlreadyBought = bag[rest.item];
+        itemAlreadyBought.quantity = Number(itemAlreadyBought.quantity) + Number(rest.quantity);
+        database.ref(`/pessoas/${commandNumber}/bag/${rest.item}`).set(itemAlreadyBought);
+      }
+      if(!bag[rest.item]) {
+        database.ref(`/pessoas/${commandNumber}/bag/${rest.item}`).set({quantity: Number(rest.quantity)}); 
+      }
+    }
     database.ref(`/report/${rest.item}`).set(Number(itemQuantity.val()) + Number(rest.quantity));
-    Promise.resolve(response);
+    if(!bag) {
+      database.ref(`/pessoas/${commandNumber}/bag/${rest.item}`).set({quantity: Number(rest.quantity)});
+    }
+    Promise.resolve('');
   }
   catch (e) {
     Promise.reject(e);
