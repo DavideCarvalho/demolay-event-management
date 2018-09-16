@@ -13,11 +13,11 @@ const showEditList = (editBag, boughtOnEntry, products, onlyNumbers, changeEditB
 <ul>
   ${
     boughtOnEntry ?
-    html`<li>Entrada - R$30,00</li>` :
-    ''
+    html`<li>Entrada - R$30,00</li><button class="btn btn-success">Trocar</button>` :
+    html`<li>Já pago</li><button class="btn btn-success">Trocar</button>` 
   }
   ${
-    Object.keys(editBag).length ?
+    editBag && Object.keys(editBag).length ?
     Object.keys(editBag).map(key => {
       const quantity = editBag[key].quantity;
       const unitValue = products[key];
@@ -39,7 +39,7 @@ const showListOfProducts = (bag, boughtOnEntry, products) => html`
     ''
   }
   ${
-    Object.keys(bag).length ?
+    bag && Object.keys(bag).length ?
     Object.keys(bag).map(key => {
       const quantity = bag[key].quantity;
       const unitValue = products[key];

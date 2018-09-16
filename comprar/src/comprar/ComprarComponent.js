@@ -70,6 +70,14 @@ const buyStuff = ({commandNumber, whatToBuy, sweetQuantity, drinkQuantity, selec
       });
       return;
     }
+    if (e.message === 'selecione uma bebida') {
+      iziToast.show({
+        title: 'Selecione uma bebida',
+        message: `Por favor, selecione uma bebida`,
+        color: 'red'
+      });
+      return;
+    }
     iziToast.error({
       title: 'Erro',
       message: 'Um erro inesperado aconteceu, por favor, tente novamente',

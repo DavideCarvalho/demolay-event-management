@@ -106,18 +106,24 @@ export const sumTotal = () => async (dispatch, getState) => {
   const productsValue = state.cashier.products;
   const boughtOnEntry = state.cashier.boughtOnEntry;
   const commandNumber = state.cashier.commandNumber;
-  let totalValue = Object.keys(bag).reduce((total, key) => {
-    const productTotal = bag[key].quantity * productsValue[key];
-    return total + productTotal;
-  }, 0);
+
+  // let totalValue = Object.keys(bag).reduce((total, key) => {
+  //   const productTotal = bag[key].quantity * productsValue[key];
+  //   return total + productTotal;
+  // }, 0);
+  let totalValue = 0;
+  if (bag) {
+    totalValue = Object.keys(bag).reduce((total, key) => {
+      const productTotal = bag[key].quantity * productsValue[key];
+      return total + productTotal;
+    }, 0);
+  }
   if (boughtOnEntry) totalValue += 30;
   const personRef = await database.ref(`/pessoas/${commandNumber}`).once('value');
   let person = personRef.val();
   if (!person.total) {
     person = {...person, total: totalValue};
     const totalRef = await database.ref(`/report/totalMoney`).once('value');
-    console.log(totalRef.val());
-    console.log(totalValue);
     database.ref(`/report/totalMoney`).set(Number(totalRef.val()) + totalValue);
     database.ref(`/pessoas/${commandNumber}`).set(person);
   }
