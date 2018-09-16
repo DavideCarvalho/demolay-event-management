@@ -1,20 +1,20 @@
 import { html } from 'hybrids';
 
 
-const BagListComponent =  (bag, products, boughtOnEntry, edit, editBag, onlyNumbers, changeEditBagState) => html`
+const BagListComponent =  (bag, products, boughtOnEntry, edit, editBag, onlyNumbers, changeEditBagState, changeEditBoughtOnEntryState, editBoughtOnEntry) => html`
   ${
     edit ?
-    html`${showEditList(editBag, boughtOnEntry, products, onlyNumbers, changeEditBagState)}` :
+    html`${showEditList(editBag, boughtOnEntry, products, onlyNumbers, changeEditBagState, changeEditBoughtOnEntryState, editBoughtOnEntry)}` :
     html`${showListOfProducts(bag, boughtOnEntry, products)}`
   }
 `;
 
-const showEditList = (editBag, boughtOnEntry, products, onlyNumbers, changeEditBagState) => html`
+const showEditList = (editBag, boughtOnEntry, products, onlyNumbers, changeEditBagState, changeEditBoughtOnEntryState, editBoughtOnEntry) => html`
 <ul>
   ${
-    boughtOnEntry ?
-    html`<li>Entrada - R$30,00</li><button class="btn btn-success">Trocar</button>` :
-    html`<li>Já pago</li><button class="btn btn-success">Trocar</button>` 
+    editBoughtOnEntry ?
+    html`<li>Entrada - R$30,00</li><button onclick=${changeEditBoughtOnEntryState(editBoughtOnEntry)} class="btn btn-success">Trocar</button>` :
+    html`<li>Convite não foi pego na entrada</li><button onclick=${changeEditBoughtOnEntryState(editBoughtOnEntry)} class="btn btn-success">Trocar</button>` 
   }
   ${
     editBag && Object.keys(editBag).length ?

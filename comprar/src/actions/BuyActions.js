@@ -15,7 +15,7 @@ export const changeEntryState = ({key, value}) => {
 
 export const buyProducts = (payload) => async dispatch => {
   const {commandNumber, ...rest} = payload;
-  if (buying === 'drink' && rest.item === "") {
+  if (rest.buying === 'drink' && rest.item === "") {
     throw new Error("selecione uma bebida")
   }
   const personRef = await database.ref(`/pessoas/${commandNumber}`).once('value');

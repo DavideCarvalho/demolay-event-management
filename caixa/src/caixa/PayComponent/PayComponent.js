@@ -3,7 +3,7 @@ import PaymentMethodsComponent from '../PaymentMethodsComponent/PaymentMethodsCo
 
 const PayComponent = (changeCheckboxState, dinheiro, credito, debito, commandNumber, totalValue, paid, payButtonHandler, edit, changeEditState, changeBag) => html`
   ${
-    totalValue ?
+    totalValue !== null ?
     html`
       ${PaymentMethodsComponent(changeCheckboxState, dinheiro, credito, debito)}
       <br/>

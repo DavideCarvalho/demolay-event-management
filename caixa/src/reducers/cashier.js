@@ -6,8 +6,9 @@ const INITIAL_STATE = {
   editBag: {},
   paid: false,
   boughtOnEntry: false,
+  editBoughtOnEntry: false,
   products: {},
-  totalValue: 0,
+  totalValue: null,
   debito: false,
   credito: false,
   dinheiro: false,
@@ -26,7 +27,7 @@ export default (state = INITIAL_STATE, { type, payload }) => {
         }
       };
     case COMMAND_FOUND:
-      return {...state, boughtOnEntry: payload.boughtOnEntry, bag: payload.bag, editBag: payload.bag, paid: payload.paid};
+      return {...state, boughtOnEntry: payload.boughtOnEntry, editBoughtOnEntry: payload.boughtOnEntry, bag: payload.bag, editBag: payload.bag, paid: payload.paid};
     case PRODUCTS_VALUE:
       return {...state, products: payload};
     case SUM_TOTAL_VALUE:

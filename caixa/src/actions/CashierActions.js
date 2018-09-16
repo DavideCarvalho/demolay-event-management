@@ -19,6 +19,7 @@ export const changeState = ({key, value}) => dispatch => {
 export const editBag = () => async (dispatch, getState) => {
   let state = getState();
   const commandNumber = state.cashier.commandNumber;
+  const editBoughtOnEntry = state.cashier.editBoughtOnEntry;
   const oldBag = state.cashier.bag;
   const personRef = await database.ref(`/pessoas/${commandNumber}`).once('value');
   const person = personRef.val();
@@ -39,19 +40,30 @@ export const editBag = () => async (dispatch, getState) => {
       value: false
     }
   });
+  dispatch({
+    type: CHANGE_STATE,
+    payload: {
+      key: 'boughtOnEntry',
+      value: editBoughtOnEntry
+    }
+  });
   state = getState();
   const bag = state.cashier.bag;
   const boughtOnEntry = state.cashier.boughtOnEntry;
-  let newTotalValue = Object.keys(bag).reduce((total, key) => {
-    const productTotal = bag[key].quantity * productsValue[key];
-    return total + productTotal;
-  }, 0);
+  let newTotalValue = 0;
+  if (bag) {
+    newTotalValue = Object.keys(bag).reduce((total, key) => {
+      const productTotal = bag[key].quantity * productsValue[key];
+      return total + productTotal;
+    }, 0);
+  }
   if (boughtOnEntry) newTotalValue += 30;
   const totalRef = await database.ref(`/report/totalMoney`).once('value');
   const total = totalRef.val();
   const newTotal = (Number(total) - Number(personTotalValue)) + Number(newTotalValue);
   person.total = newTotalValue;
-  person.bag = bag;
+  person.bag = bag || {};
+  person.boughtOnEntry = boughtOnEntry;
   database.ref(`/pessoas/${commandNumber}`).set(person);
   database.ref(`/report/totalMoney`).set(newTotal);
   for(const key in oldBag) {
@@ -106,11 +118,6 @@ export const sumTotal = () => async (dispatch, getState) => {
   const productsValue = state.cashier.products;
   const boughtOnEntry = state.cashier.boughtOnEntry;
   const commandNumber = state.cashier.commandNumber;
-
-  // let totalValue = Object.keys(bag).reduce((total, key) => {
-  //   const productTotal = bag[key].quantity * productsValue[key];
-  //   return total + productTotal;
-  // }, 0);
   let totalValue = 0;
   if (bag) {
     totalValue = Object.keys(bag).reduce((total, key) => {
@@ -134,6 +141,9 @@ export const sumTotal = () => async (dispatch, getState) => {
 }
 
 export const pay = (commandNumber, total, credito, debito, dinheiro) => async dispatch => {
+  if (!credito && !debito && !dinheiro) {
+    throw new Error('escolha um método de pagamento');
+  }
   const personRef = await database.ref(`/pessoas/${commandNumber}`).once('value');
   let person = personRef.val();
   person = {...person, paid: true};

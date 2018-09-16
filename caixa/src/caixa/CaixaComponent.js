@@ -12,6 +12,10 @@ import styles from './css/bootstrap.js';
 
 store.dispatch(getProductsValue());
 
+const changeEditBoughtOnEntryHandler = (editBoughtOnEntry) => (host, e) => {
+  store.dispatch(changeState({key: 'editBoughtOnEntry', value: !editBoughtOnEntry}))
+}
+
 const onlyNumbers = (host, e) => {
   const addedInput = String.fromCharCode(e.which);
   const currentValue = (e.target.value)
@@ -72,6 +76,14 @@ const payButtonHandler = (commandNumber, totalValue, credito, debito, dinheiro) 
       color: 'green'
     });
   } catch (e) {
+    if (e.message === 'escolha um método de pagamento') {
+      iziToast.show({
+        title: 'Método de pagamento',
+        message: `Escolha ao menos um método de pagamento`,
+        color: 'red'
+      });
+      return;
+    }
     iziToast.show({
       title: 'Erro',
       message: `Aconteceu um erro inesperado, por favor, tente novamente`,
@@ -87,16 +99,17 @@ const addToTotal = (itemValue) => {
 const CaixaComponent = {
   _commandNumber: '',
   _boughtOnEntry: false,
+  _editBoughtOnEntry: false,
   _paid: false,
   _bag: {},
   _editBag: {},
   _products: {},
-  _totalValue: 0,
+  _totalValue: null,
   _credito: false,
   _debito: false,
   _dinheiro: false,
   _edit: false,
-  render: ({ _commandNumber, _boughtOnEntry, _paid, _bag, _editBag, _products, _totalValue, _credito, _debito, _dinheiro, _edit }) => html`
+  render: ({ _commandNumber, _boughtOnEntry, _editBoughtOnEntry, _paid, _bag, _editBag, _products, _totalValue, _credito, _debito, _dinheiro, _edit }) => html`
     <style>
       ${styles}
       .center-block {
@@ -113,7 +126,7 @@ const CaixaComponent = {
           <br/>
           ${showPaid(_paid)}
           <br/>
-          ${BagListComponent(_bag, _products, _boughtOnEntry, _edit, _editBag, onlyNumbers, changeBagEditStateHandler)}
+          ${BagListComponent(_bag, _products, _boughtOnEntry, _edit, _editBag, onlyNumbers, changeBagEditStateHandler, changeEditBoughtOnEntryHandler, _editBoughtOnEntry)}
           ${showTotalValue(_totalValue)}
           <div class="col">
             ${PayComponent(changeCheckboxState, _dinheiro, _credito, _debito, _commandNumber, _totalValue, _paid, payButtonHandler, _edit, changeEditState, changeBagHandler)}
@@ -138,7 +151,7 @@ const showPaid = (paid) => html`
 
 const showTotalValue = (totalValue) => html`
   ${
-    totalValue ?
+    totalValue !== null ?
       html`<p class="text-center"> Valor total - ${totalValue.toLocaleString('pt-BR', {minimumFractionDigits: 2, style: 'currency', currency: 'BRL'})}</p>` :
       ''
   }
@@ -147,6 +160,7 @@ const showTotalValue = (totalValue) => html`
 const connectedCaixaComponent = (
   connectedCommandNumber,
   connectedBoughtOnEntry,
+  connectedEditBoughtOnEntry,
   connectedPaid,
   connectedBag,
   connectedEditBag,
@@ -159,6 +173,7 @@ const connectedCaixaComponent = (
 ) => {
   CaixaComponent._commandNumber = connectedCommandNumber;
   CaixaComponent._boughtOnEntry = connectedBoughtOnEntry;
+  CaixaComponent._editBoughtOnEntry = connectedEditBoughtOnEntry;
   CaixaComponent._paid = connectedPaid;
   CaixaComponent._bag = connectedBag;
   CaixaComponent._editBag = connectedEditBag;
@@ -174,6 +189,7 @@ const connectedCaixaComponent = (
 const caixa = connectedCaixaComponent(
   connect(store, ({ cashier }) => cashier.commandNumber),
   connect(store, ({ cashier }) => cashier.boughtOnEntry),
+  connect(store, ({ cashier }) => cashier.editBoughtOnEntry),
   connect(store, ({ cashier }) => cashier.paid),
   connect(store, ({ cashier }) => cashier.bag),
   connect(store, ({ cashier }) => cashier.editBag),
