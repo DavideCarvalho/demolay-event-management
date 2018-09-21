@@ -1,62 +1,76 @@
+import database from '../firebase';
+
 export const CHANGE_ENTRY_STATE = 'CHANGE_ENTRY_STATE';
 export const ADD_NEW_PERSON = 'ADD_NEW_PERSON';
 export const CHANGE_PERSON_LIST = 'CHANGE_PERSON_LIST';
 export const LOADING = 'LOADING';
-import database from '../firebase';
 
-export const changeEntryState = ({key, value}) => {
-  return {
-    type: CHANGE_ENTRY_STATE,
-    payload: {
-      key,
-      value
+export const changeEntryState = ({ key, value }) => ({
+  type: CHANGE_ENTRY_STATE,
+  payload: {
+    key,
+    value,
+  },
+});
+
+const addToReport = async ({ boughtOnEntry }) => new Promise(async (resolve, reject) => {
+  try {
+    const reportValue = {
+      totalDePessoas: 1,
+      compradoNaEntrada: boughtOnEntry ? 1 : 0,
+    };
+    const reportRef = await database.collection('/report').doc('/pessoas').get();
+    if (!reportRef.exists) {
+      database.collection('/report').doc('/pessoas').set(reportValue);
+      resolve();
+      return;
     }
+    const existingReportData = reportRef.data();
+    let { totalDePessoas, compradoNaEntrada } = existingReportData;
+    totalDePessoas = totalDePessoas
+      ? totalDePessoas + reportValue.totalDePessoas
+      : reportValue.totalDePessoas;
+    compradoNaEntrada = compradoNaEntrada
+      ? compradoNaEntrada + reportValue.compradoNaEntrada
+      : reportValue.compradoNaEntrada;
+    const updatedReportData = { ...existingReportData, totalDePessoas, compradoNaEntrada };
+    await database.collection('/report').doc('/pessoas').set(updatedReportData);
+    resolve();
+  } catch (e) {
+    reject(e);
   }
-}
+});
 
-export const changePersonList = personList => dispatch => {
-  dispatch({
-    type: CHANGE_PERSON_LIST,
-    payload: personList
-  });
-}
-
-export const addNewPerson = ({commandNumber, boughtOnEntry}) => async dispatch => {
+export const addNewPerson = ({ commandNumber, boughtOnEntry }) => async (dispatch) => {
   dispatch({
     type: LOADING,
-    payload: true
+    payload: true,
   });
   try {
-    const alreadyExists = await database.ref(`/pessoas/${commandNumber}`).once('value');
-    if (alreadyExists.val()) {
-      throw new Error('already exists');
-    }
-    const personQuantity = await database.ref(`/report/totalPeople`).once('value');
-    let boughtOnEntryQuantity;
-    if (boughtOnEntry) {
-      boughtOnEntryQuantity = await database.ref(`/report/boughtOnEntry`).once('value');
-      database.ref(`/report/boughtOnEntry`).set(Number(boughtOnEntryQuantity.val()) + 1);
-    }
-    await database.ref(`/pessoas/${commandNumber}`).set({
-      boughtOnEntry,
-      paid: false
-    });
-    database.ref(`/report/totalPeople`).set(Number(personQuantity.val()) + 1);
+    const personRef = await database.collection('/pessoas').doc(commandNumber).get();
+    if (personRef.exists) throw new Error('already exists');
+    const person = {
+      comanda: commandNumber,
+      compradoNaEntrada: boughtOnEntry,
+      pago: false,
+    };
+    database.collection('/pessoas').doc(commandNumber).set(person);
+    addToReport({ boughtOnEntry });
     dispatch({
       type: ADD_NEW_PERSON,
       payload: {
         commandNumber,
         boughtOnEntry,
-        paid: false
-      }
-    })
+        paid: false,
+      },
+    });
     return Promise.resolve();
   } catch (e) {
     return Promise.reject(e);
   } finally {
     dispatch({
       type: LOADING,
-      payload: false
-    })
+      payload: false,
+    });
   }
-}
+};

@@ -1,17 +1,18 @@
 import { html } from 'hybrids';
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
 import styles from './entrada/css/bootstrap';
 
-export const connectComponent = (reduxStore, reduxStoreDictionary, component) => {
-  const store = reduxStore.getState();
-  Object.keys(store).forEach(reduxStoreName => {
-    const componentProperty = reduxStoreDictionary[reduxStoreName];
-    component.props[componentProperty] = store[reduxStoreName];
+export const showMessage = ({ title, message, color }) => {
+  iziToast.show({
+    title,
+    message,
+    color,
   });
-  return component;
-}
+};
 
 export const addBootstrapStyle = html`
   <style>
     ${styles}
   </style>
-`
+`;

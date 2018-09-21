@@ -8,8 +8,8 @@ const rootStore = createStore(
   compose(
     composeWithDevTools(
       applyMiddleware(thunk),
-    )
-  )
+    ),
+  ),
 );
 
 export default rootStore;

@@ -4,11 +4,15 @@
   "main": "index.js",
   "repository": "https://github.com/DavideCarvalho/demolay-event-management.git",
   "author": "Davi de Carvalho <davicarvalho96@yahoo.com.br>",
+  "scripts": {
+    "cypress:open": "cypress open"
+  },
   "license": "MIT",
   "dependencies": {
     "single-spa": "4.0.1"
   },
   "devDependencies": {
-    "cssnano": "^4.1.0"
+    "cssnano": "^4.1.0",
+    "cypress": "3.1.0"
   }
 }

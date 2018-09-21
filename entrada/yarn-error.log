@@ -1,0 +1,59 @@
+Arguments: 
+  C:\Users\davi.carvalho\AppData\Local\nvs\default\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js
+
+PATH: 
+  C:\Users\davi.carvalho\Documents\cmder\bin;C:\Users\davi.carvalho\Documents\cmder\vendor\conemu-maximus5\ConEmu\Scripts;C:\Users\davi.carvalho\Documents\cmder\vendor\conemu-maximus5;C:\Users\davi.carvalho\Documents\cmder\vendor\conemu-maximus5\ConEmu;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Program Files\Java\jdk1.8.0_131\bin;C:\ProgramData\Oracle\Java\javapath;C:\windows\system32;C:\windows;C:\windows\System32\Wbem;C:\windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\Git\cmd;C:\Program Files (x86)\Windows Kits\8.1\Windows Performance Toolkit\;;C:\Program Files (x86)\Yarn\bin\;C:\Users\davi.carvalho\AppData\Local\Microsoft\WindowsApps;C:\Program Files\Java\jdk1.8.0_131\bin;C:\apache-maven-3.5.0\bin;C:\Program Files\RabbitMQ Server\rabbitmq_server-3.6.10\sbin;C:\Python27;C:\apache-maven-3.5.0\bin;C:\Users\davi.carvalho\Documents\cmder;C:\Program Files\Microsoft VS Code\bin;C:\Users\davi.carvalho\AppData\Local\.meteor\;C:\phantomjs\bin;C:\Program Files\Heroku\bin;C:\;C:\Users\davi.carvalho\AppData\Local\hyper\app-2.0.0\resources\bin;C:\Users\davi.carvalho\AppData\Local\nvs\default;C:\Users\davi.carvalho\AppData\Local\nvs\;C:\Users\davi.carvalho\AppData\Local\Yarn\bin;C:\Users\davi.carvalho\AppData\Local\Programs\Microsoft VS Code\bin;C:\Program Files\Git\usr\bin;C:\Program Files\Git\usr\share\vim\vim74;C:\Users\davi.carvalho\Documents\cmder\
+
+Yarn version: 
+  1.9.4
+
+Node version: 
+  10.9.0
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: http://nexus.produbanbr.corp/repository/npm-all/@webcomponents/shadycss/-/shadycss-1.5.2.tgz: Request failed "404 Not Found"
+      at ResponseError.ExtendableBuiltin (C:\Program Files (x86)\Yarn\lib\cli.js:218:66)
+      at new ResponseError (C:\Program Files (x86)\Yarn\lib\cli.js:324:124)
+      at Request.<anonymous> (C:\Program Files (x86)\Yarn\lib\cli.js:61013:26)
+      at Request.emit (events.js:182:13)
+      at Request.module.exports.Request.onRequestResponse (C:\Program Files (x86)\Yarn\lib\cli.js:138345:10)
+      at ClientRequest.emit (events.js:187:15)
+      at HTTPParser.parserOnIncomingClient (_http_client.js:555:21)
+      at HTTPParser.parserOnHeadersComplete (_http_common.js:109:17)
+      at Socket.socketOnData (_http_client.js:441:20)
+      at Socket.emit (events.js:182:13)
+
+npm manifest: 
+  {
+    "name": "app-entrada",
+    "version": "1.0.0",
+    "main": "index.js",
+    "license": "MIT",
+    "dependencies": {
+      "axios": "^0.18.0",
+      "bootstrap": "^4.1.3",
+      "firebase": "^5.4.2",
+      "hybrids": "^1.3.1",
+      "izitoast": "^1.4.0",
+      "redux": "^4.0.0",
+      "redux-devtools-extension": "^2.13.5",
+      "redux-thunk": "^2.3.0"
+    },
+    "devDependencies": {
+      "babel-core": "^6.26.3",
+      "babel-plugin-transform-object-rest-spread": "^6.26.0",
+      "babel-plugin-transform-runtime": "^6.23.0",
+      "babel-preset-env": "^1.7.0",
+      "eslint": "4.19.1",
+      "eslint-config-airbnb-base": "^13.1.0"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
