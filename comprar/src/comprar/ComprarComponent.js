@@ -1,30 +1,25 @@
 import { html, define } from 'hybrids';
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
-import styles from './css/bootstrap.js';
+import styles from './css/bootstrap';
 import ComprarComponentStyles from './ComprarComponentStyles';
 import DocesComponent from './doces/DocesComponent';
 import BebidasComponent from './bebidas/BebidasComponent';
+import RadioComponent from './components/RadioComponent';
 import { changeEntryState, buyProducts } from '../actions/BuyActions';
+import { onlyNumbers } from '../utils';
 import store from '../store';
-import connect from '../connect';
+import { connectComponent } from '../connect';
 
-const onlyNumbers = (host, e) => {
-  const addedInput = String.fromCharCode(e.which);
-  const currentValue = (e.target.value)
-  const fullValue = `${currentValue}${addedInput}`;
-  if (!Number(fullValue)) {
-    e.preventDefault();
-    return;
-  };
-}
+const DOCE = 'doce';
+const BEBIDA = 'bebida';
 
 const changeState = (host, e) => {
   store.dispatch(changeEntryState({ key: e.target.id, value: e.target.value }));
-}
+};
 
-const changeRadio = (key, value) => (host, e) => {  
-  store.dispatch(changeEntryState({ key, value }))
+const changeRadioState = ({ key, value }) => (host, e) => {
+  store.dispatch(changeEntryState({ key, value }));
   if (value === 'sweet') {
     sweetChecked = true;
     drinksChecked = false;
@@ -32,144 +27,121 @@ const changeRadio = (key, value) => (host, e) => {
     sweetChecked = false;
     drinksChecked = true;
   }
-}
+};
 
-const buyStuff = ({commandNumber, whatToBuy, sweetQuantity, drinkQuantity, selectedDrink}) => async (host, e) => {
+const showToast = ({title, message, color}) => {
+  iziToast.show({
+    title,
+    message,
+    color,
+  });
+};
+
+const buyStuff = ({ buy: {
+  commandNumber,
+  whatToBuy,
+  sweetQuantity,
+  drinkQuantity,
+  selectedDrink,
+},
+}) => async (host, e) => {
   e.preventDefault();
-  if (whatToBuy === 'sweet' && !sweetQuantity) {
-    if (sweetQuantity === '') showToast({title: 'Erro', message: 'Por favor, coloque a quantidade de doces desejada', color: 'red'});
-    if (sweetQuantity === 0) showToast({title: 'Erro', message: 'A quantidade de doces deve ser maior que 0', color: 'red'});
+  const numberSweetQuantity = Number(sweetQuantity.trim());
+  if (whatToBuy === DOCE && !numberSweetQuantity) {
+    showToast({ title: 'Erro', message: 'A quantidade de doces deve ser maior que 0', color: 'red' });
     return;
   }
-  if (whatToBuy === 'drinks' && !drinkQuantity) {
-    if (drinkQuantity === '') showToast({title: 'Erro', message: 'Por favor, coloque a quantidade de bebidas desejada', color: 'red'});
-    if (drinkQuantity === 0) showToast({title: 'Erro', message: 'A quantidade de bebidas deve ser maior que 0', color: 'red'});
+  const numberDrinkQuantity = Number(drinkQuantity.trim());
+  if (whatToBuy === BEBIDA && !selectedDrink) {
+    showToast({ title: 'Erro', message: 'Selecione uma bebida para colocar a quantidade', color: 'red' });
     return;
   }
-  let payload = {
+  if (whatToBuy === BEBIDA && !numberDrinkQuantity) {
+    showToast({ title: 'Erro', message: 'A quantidade de bebidas deve ser maior que 0', color: 'red' });
+    return;
+  }
+  const payload = {
     commandNumber,
     buying: whatToBuy,
-    item: whatToBuy === 'sweet' ? 'doce' : selectedDrink,
-    quantity: whatToBuy === 'sweet' ? sweetQuantity : drinkQuantity
-  }
-  if (selectedDrink)
-    payload = {...payload, selectedDrink};
+    item: whatToBuy === DOCE ? DOCE : selectedDrink,
+    quantity: whatToBuy === DOCE ? sweetQuantity : drinkQuantity,
+    time: new Date(),
+  };
   try {
-    const response = await store.dispatch(buyProducts(payload));
+    await store.dispatch(buyProducts(payload));
     iziToast.success({
       title: 'Sucesso',
       message: `Compra efetuada com sucesso na comanda ${commandNumber}`,
-      color: 'green'
+      color: 'green',
     });
-  } catch (e) {
-    if (e.message === 'não existe') {
+  } catch (error) {
+    if (error.message === 'não existe') {
       iziToast.show({
-        title: 'Não existe',
+        title: 'Pessoa não existe',
         message: `A comanda ${commandNumber} não existe`,
-        color: 'red'
-      });
-      return;
-    }
-    if (e.message === 'selecione uma bebida') {
-      iziToast.show({
-        title: 'Selecione uma bebida',
-        message: `Por favor, selecione uma bebida`,
-        color: 'red'
+        color: 'red',
       });
       return;
     }
     iziToast.error({
       title: 'Erro',
       message: 'Um erro inesperado aconteceu, por favor, tente novamente',
-      color: 'red'
+      color: 'red',
     });
   }
-}
-
-const showToast = ({title, message, color}) => {
-  iziToast.show({
-    title,
-    message,
-    color
-  });
-}
-
-let sweetChecked = true;
-let drinksChecked = false;
-
-const SWEET = 'sweet';
-const DRINKS = 'drinks';
+};
 
 const ComprarComponent = {
-  commandNumber: '',
-  whatToBuy: 'sweet',
-  sweetQuantity: 0,
-  drinkQuantity: 0,
-  selectedDrink: '',
-  loading: false,
-  render: ({ commandNumber, whatToBuy, sweetQuantity, drinkQuantity, selectedDrink, loading }) => html`
+  props: {
+    buy: {
+      commandNumber: '',
+      sweetQuantity: '',
+      whatToBuy: 'doce',
+      drink: '',
+      drinkQuantity: '',
+      selectedDrink: '',
+      loading: false,
+    },
+  },
+  actions: {
+    changeRadio: ({ key, value }) => console.log(key, value),
+  },
+  render: ({ props, actions }) => html`
   <style>
     ${styles}
     ${ComprarComponentStyles}
   </style>
-  <form class="form-signin text-center" onsubmit=${buyStuff({commandNumber, whatToBuy, sweetQuantity, drinkQuantity, selectedDrink})}>
+  <form class="form-signin text-center" onsubmit=${buyStuff({ buy: props.buy })}>
     <h1 class="h3 mb-3 font-weight-normal">Comprar</h1>
     <div class="container">
       <div class="row">
         <div class="col-sm">
-          <div class="custom-control custom-radio custom-control-inline">
-            <input type="radio" id="buySweet" name="customRadioInline1" class="custom-control-input" value=${SWEET} onchange=${changeRadio('whatToBuy', SWEET)} checked=${whatToBuy === SWEET}>
-            <label class="custom-control-label" for="buySweet">Doces</label>
-          </div>
+          ${RadioComponent({ radioLabel: 'Doce', value: DOCE, onChange: actions.changeRadio({ key: 'whatToBuy', value: DOCE }), checked: props.buy.whatToBuy === DOCE })}
         </div>
         <div class="col-sm">
-          <div class="custom-control custom-radio custom-control-inline">
-            <input type="radio" id="buyDrink" name="customRadioInline1" class="custom-control-input" value=${DRINKS} onchange=${changeRadio('whatToBuy', DRINKS)} checked=${whatToBuy === DRINKS}>
-            <label class="custom-control-label" for="buyDrink">Bebidas</label>
-          </div>
+          ${RadioComponent({ radioLabel: 'Bebida', value: BEBIDA, onChange: actions.changeRadio({ key: 'whatToBuy', value: BEBIDA }), checked: props.buy.whatToBuy === BEBIDA })}
         </div>
       </div>
     </div>
     <label for="inputEmail" class="sr-only">Número da comanda</label>
-    <input onkeypress=${onlyNumbers} oninput=${changeState} value=${commandNumber} id="commandNumber" type="text" id="inputEmail" class="form-control" placeholder="Número da comanda">
+    <input onkeypress=${onlyNumbers} oninput=${changeState} value=${props.buy.commandNumber} id="commandNumber" type="text" id="inputEmail" class="form-control" placeholder="Número da comanda">
     <br/>
     <label for="inputEmail" class="sr-only">Número da comanda</label>
     ${
-      whatToBuy === 'sweet' ?
-      DocesComponent(sweetQuantity, changeState, onlyNumbers) :
-      BebidasComponent(drinkQuantity, changeState, selectedDrink, onlyNumbers)
-    }
+  props.buy.whatToBuy === 'doce'
+    ? DocesComponent({ sweetQuantity: props.buy.sweetQuantity, changeState })
+    : BebidasComponent({ drinkQuantity: props.buy.drinkQuantity, changeState, selectedDrink: props.buy.selectedDrink })
+}
     <br />
-    <button class="btn btn-lg btn-primary btn-block" type="submit" disabled=${loading}>Comprar</button>
+    <button class="btn btn-lg btn-primary btn-block" type="submit" disabled=${props.buy.loading}>Comprar</button>
   </form>
-  `
-}
+  `,
+};
 
-const connectedComprarComponent = (
-  connectedCommandNumber,
-  connectedWhatToBuy,
-  connectedSweetQuantity,
-  connectedDrinkQuantity,
-  connectedSelectedDrink,
-  connectedLoading
-) => {
-  ComprarComponent.commandNumber = connectedCommandNumber;
-  ComprarComponent.whatToBuy = connectedWhatToBuy;
-  ComprarComponent.sweetQuantity = connectedSweetQuantity;
-  ComprarComponent.drinkQuantity = connectedDrinkQuantity;
-  ComprarComponent.selectedDrink = connectedSelectedDrink;
-  ComprarComponent.loading = connectedLoading
-  return ComprarComponent
-}
+const mapDispatchToProps = {
+  changeRadio: ({ key, value }) => changeRadioState({ key, value }),
+};
 
-const comprar = connectedComprarComponent(
-  connect(store, ({ buy }) => buy.commandNumber),
-  connect(store, ({ buy }) => buy.whatToBuy),
-  connect(store, ({ buy }) => buy.sweetQuantity),
-  connect(store, ({ buy }) => buy.drinkQuantity),
-  connect(store, ({ buy }) => buy.selectedDrink),
-  connect(store, ({ buy }) => buy.loading),
-)
-
+const comprar = connectComponent(store, mapDispatchToProps, ComprarComponent);
 
 define('app-comprar', comprar);

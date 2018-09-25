@@ -5,7 +5,7 @@ import { addNewPerson } from '../actions/EntryActions';
 import store from '../store';
 import { connectComponent } from '../connect';
 
-const enterNewPerson = (commandNumber, boughtOnEntry) => async (host, event) => {
+const enterNewPerson = ({ commandNumber, boughtOnEntry }) => async (host, event) => {
   event.preventDefault();
   try {
     await store.dispatch(addNewPerson({ commandNumber, boughtOnEntry }));
@@ -40,12 +40,15 @@ const EntradaComponent = {
       loading: false,
     },
   },
-  render: ({ props }) => html`
+  actions: {
+    enterNewPerson: ({ commandNumber, boughtOnEntry }) => console.log(commandNumber, boughtOnEntry),
+  },
+  render: ({ props, actions }) => html`
   ${addBootstrapStyle}
   <style>
     ${entradaStyles}
   </style>
-  <form class="form-signin text-center" onsubmit=${enterNewPerson(props.entry.commandNumber, props.entry.boughtOnEntry)}>
+  <form class="form-signin text-center" onsubmit=${actions.enterNewPerson({ commandNumber: props.entry.commandNumber, boughtOnEntry: props.entry.boughtOnEntry })}>
     <h1 class="h3 mb-3 font-weight-normal">Entrada</h1>
     <app-entrada-form></app-entrada-form>
     <button disabled=${props.entry.loading} class="btn btn-lg btn-primary btn-block" type="submit">Entrar</button>
@@ -53,9 +56,9 @@ const EntradaComponent = {
   `,
 };
 
-const mapStateToProps = {
-  entry: 'entry',
-};
+const mapDispatchToProps = {
+  enterNewPerson: ({ commandNumber, boughtOnEntry }) => enterNewPerson({ commandNumber, boughtOnEntry })
+}
 
-const entrada = connectComponent(store, mapStateToProps, {}, EntradaComponent);
+const entrada = connectComponent(store, mapDispatchToProps, EntradaComponent);
 define('app-entrada', entrada);

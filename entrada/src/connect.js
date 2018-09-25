@@ -7,14 +7,10 @@ const connect = (reducer, mapState) => ({
 
 export const connectComponent = (
   reduxStore,
-  reduxStoreDictionary = {},
   actionsDictionary = {},
   component,
 ) => {
   let componentWithProps = { ...component, props: connect(reduxStore) };
-  // Object.keys(actionsDictionary).forEach(actionPropertyName => {
-  //   componentWithProps.actions[actionPropertyName] = actionsDictionary[actionPropertyName];
-  // }
   Object.keys(actionsDictionary).forEach((actionPropertyName) => {
     componentWithProps = {
       ...componentWithProps,

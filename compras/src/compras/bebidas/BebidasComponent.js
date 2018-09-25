@@ -1,7 +1,6 @@
 import { html } from 'hybrids';
-import { onlyNumbers } from '../../utils';
 
-const BebidasComponent = ({ drinkQuantity, changeState, selectedDrink }) => html`
+const BebidasComponent = (connectedDrink, changeState, selectedDrink, onlyNumbers) => html`
   <select value=${selectedDrink} onchange=${changeState} class="form-control" id="selectedDrink">
     <option value="" selected disabled hidden>Escolha uma bebida</option>
     <option value="agua">Água</option>
@@ -14,7 +13,7 @@ const BebidasComponent = ({ drinkQuantity, changeState, selectedDrink }) => html
   </select>
   <br />
   <label for="inputEmail" class="sr-only">Quantidade de bebida</label>
-  <input onkeypress=${onlyNumbers} oninput=${changeState} value=${drinkQuantity} type="text" id="drinkQuantity" class="form-control" placeholder="Quantidade de ${selectedDrink}">
-`;
+  <input onkeypress=${onlyNumbers} oninput=${changeState} value=${connectedDrink} type="text" id="drinkQuantity" class="form-control" placeholder="Quantidade de ${selectedDrink}">
+`
 
 export default BebidasComponent;
