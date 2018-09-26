@@ -1,3 +1,3 @@
 import 'hybrids/shim';
 import './comprar/ComprarComponent';
-import './comprar/App';
+import './comprar/containers/AvaliableProductsContainer';

@@ -109,7 +109,23 @@ const CaixaComponent = {
   _debito: false,
   _dinheiro: false,
   _edit: false,
-  render: ({ _commandNumber, _boughtOnEntry, _editBoughtOnEntry, _paid, _bag, _editBag, _products, _totalValue, _credito, _debito, _dinheiro, _edit }) => html`
+  props: {
+    cashier: {
+      commandNumber: '',
+      bag: {},
+      editBag: {},
+      paid: false,
+      boughtOnEntry: false,
+      editBoughtOnEntry: false,
+      products: {},
+      totalValue: null,
+      debito: false,
+      credito: false,
+      dinheiro: false,
+      edit: false,
+    },
+  },
+  render: ({ _commandNumber, _boughtOnEntry, _editBoughtOnEntry, _paid, _bag, _editBag, _products, _totalValue, _credito, _debito, _dinheiro, _edit, props }) => html`
     <style>
       ${styles}
       .center-block {

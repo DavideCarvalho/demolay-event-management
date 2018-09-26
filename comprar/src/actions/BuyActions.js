@@ -14,7 +14,8 @@ export const changeEntryState = ({ key, value }) => {
 };
 
 export const buyProducts = payload => async (dispatch) => {
-  const personRef = await database.collection('/pessoas').doc(`${payload.commandNumber}`).get();
+  const { commandNumber, ...rest } = payload
+  const personRef = await database.collection('/pessoas').doc(`${commandNumber}`).get();
   if (!personRef.exists) {
     throw new Error('Pessoa não existe');
   }
@@ -23,7 +24,7 @@ export const buyProducts = payload => async (dispatch) => {
     payload: true,
   });
   try {
-    await database.collection('/pessoas').doc(`${payload.commandNumber}`).collection('bag').add(payload)
+    await database.collection('/pessoas').doc(`${commandNumber}`).collection('bag').add(rest)
     return Promise.resolve();
   } catch (e) {
     return Promise.reject(e);

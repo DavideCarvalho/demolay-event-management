@@ -10,6 +10,7 @@ import { changeEntryState, buyProducts } from '../actions/BuyActions';
 import { onlyNumbers } from '../utils';
 import store from '../store';
 import { connectComponent } from '../connect';
+import './containers/AvaliableProductsContainer';
 
 const DOCE = 'doce';
 const BEBIDA = 'bebida';
@@ -18,15 +19,8 @@ const changeState = (host, e) => {
   store.dispatch(changeEntryState({ key: e.target.id, value: e.target.value }));
 };
 
-const changeRadioState = ({ key, value }) => (host, e) => {
+const changeRadioState = ({ key, value }) => (host, event) => {
   store.dispatch(changeEntryState({ key, value }));
-  if (value === 'sweet') {
-    sweetChecked = true;
-    drinksChecked = false;
-  } else {
-    sweetChecked = false;
-    drinksChecked = true;
-  }
 };
 
 const showToast = ({title, message, color}) => {
@@ -62,10 +56,10 @@ const buyStuff = ({ buy: {
   }
   const payload = {
     commandNumber,
-    buying: whatToBuy,
+    comprado: whatToBuy,
     item: whatToBuy === DOCE ? DOCE : selectedDrink,
-    quantity: whatToBuy === DOCE ? sweetQuantity : drinkQuantity,
-    time: new Date(),
+    quantidade: whatToBuy === DOCE ? sweetQuantity : drinkQuantity,
+    data: new Date(),
   };
   try {
     await store.dispatch(buyProducts(payload));
@@ -113,6 +107,7 @@ const ComprarComponent = {
   </style>
   <form class="form-signin text-center" onsubmit=${buyStuff({ buy: props.buy })}>
     <h1 class="h3 mb-3 font-weight-normal">Comprar</h1>
+    <app-avaliable-products></app-avaliable-products>
     <div class="container">
       <div class="row">
         <div class="col-sm">
