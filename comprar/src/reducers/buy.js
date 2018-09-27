@@ -3,7 +3,7 @@ import { CHANGE_STATE, LOADING } from '../actions/BuyActions';
 const INITIAL_STATE = {
   commandNumber: '',
   sweetQuantity: '',
-  whatToBuy: 'doce',
+  whatToBuy: '',
   drink: '',
   drinkQuantity: '',
   selectedDrink: '',
@@ -15,7 +15,7 @@ export default (state = INITIAL_STATE, { type, payload }) => {
     case CHANGE_STATE:
       return { ...state, [payload.key]: payload.value };
     case LOADING:
-      return { ...state, loading: payload }
+      return { ...state, loading: payload };
     default:
       return state;
   }

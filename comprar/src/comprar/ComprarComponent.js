@@ -23,7 +23,7 @@ const changeRadioState = ({ key, value }) => (host, event) => {
   store.dispatch(changeEntryState({ key, value }));
 };
 
-const showToast = ({title, message, color}) => {
+const showToast = ({ title, message, color }) => {
   iziToast.show({
     title,
     message,
@@ -108,22 +108,12 @@ const ComprarComponent = {
   <form class="form-signin text-center" onsubmit=${buyStuff({ buy: props.buy })}>
     <h1 class="h3 mb-3 font-weight-normal">Comprar</h1>
     <app-avaliable-products></app-avaliable-products>
-    <div class="container">
-      <div class="row">
-        <div class="col-sm">
-          ${RadioComponent({ radioLabel: 'Doce', value: DOCE, onChange: actions.changeRadio({ key: 'whatToBuy', value: DOCE }), checked: props.buy.whatToBuy === DOCE })}
-        </div>
-        <div class="col-sm">
-          ${RadioComponent({ radioLabel: 'Bebida', value: BEBIDA, onChange: actions.changeRadio({ key: 'whatToBuy', value: BEBIDA }), checked: props.buy.whatToBuy === BEBIDA })}
-        </div>
-      </div>
-    </div>
     <label for="inputEmail" class="sr-only">Número da comanda</label>
     <input onkeypress=${onlyNumbers} oninput=${changeState} value=${props.buy.commandNumber} id="commandNumber" type="text" id="inputEmail" class="form-control" placeholder="Número da comanda">
     <br/>
     <label for="inputEmail" class="sr-only">Número da comanda</label>
     ${
-  props.buy.whatToBuy === 'doce'
+  props.buy.whatToBuy === 'doces'
     ? DocesComponent({ sweetQuantity: props.buy.sweetQuantity, changeState })
     : BebidasComponent({ drinkQuantity: props.buy.drinkQuantity, changeState, selectedDrink: props.buy.selectedDrink })
 }
