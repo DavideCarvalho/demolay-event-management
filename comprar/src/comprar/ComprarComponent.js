@@ -11,6 +11,7 @@ import { onlyNumbers } from '../utils';
 import store from '../store';
 import { connectComponent } from '../connect';
 import './containers/AvaliableProductsContainer';
+import './containers/ProductSelectionContainer';
 
 const DOCE = 'doce';
 const BEBIDA = 'bebida';
@@ -112,11 +113,7 @@ const ComprarComponent = {
     <input onkeypress=${onlyNumbers} oninput=${changeState} value=${props.buy.commandNumber} id="commandNumber" type="text" id="inputEmail" class="form-control" placeholder="Número da comanda">
     <br/>
     <label for="inputEmail" class="sr-only">Número da comanda</label>
-    ${
-  props.buy.whatToBuy === 'doces'
-    ? DocesComponent({ sweetQuantity: props.buy.sweetQuantity, changeState })
-    : BebidasComponent({ drinkQuantity: props.buy.drinkQuantity, changeState, selectedDrink: props.buy.selectedDrink })
-}
+    <app-product-selection></app-product-selection>
     <br />
     <button class="btn btn-lg btn-primary btn-block" type="submit" disabled=${props.buy.loading}>Comprar</button>
   </form>
