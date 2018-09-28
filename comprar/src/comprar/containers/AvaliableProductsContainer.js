@@ -3,6 +3,7 @@ import store from '../../store';
 import { connectComponent } from '../../connect';
 import { fetchProducts } from '../../actions/ProductsActions';
 import { changeEntryState } from '../../actions/BuyActions';
+import { changeIntendedProductCategory } from '../../actions/CartActions';
 import RadioComponent from '../components/RadioComponent';
 import styles from '../css/bootstrap';
 import ComprarComponentStyles from '../ComprarComponentStyles';
@@ -14,7 +15,7 @@ const AvaliableProductsContainer = {
     buy: {
       commandNumber: '',
       sweetQuantity: '',
-      whatToBuy: 'doce',
+      whatToBuy: '',
       drink: '',
       drinkQuantity: '',
       selectedDrink: '',
@@ -24,8 +25,9 @@ const AvaliableProductsContainer = {
   },
   actions: {
     changeState: ({ key, value }) => console.log(key, value),
+    changeIntendedProductCategory: ({ productCategory }) => console.log(productCategory),
   },
-  render: ({ props, actions }) => html`
+  render: ({ props: { products, cart }, actions }) => html`
   <style>
     ${styles}
     ${ComprarComponentStyles}
@@ -33,9 +35,9 @@ const AvaliableProductsContainer = {
   <div class="container text-center">
     <div class="row">
       ${
-        Object.keys(props.products.products).map(product => html`
+        Object.keys(products.products).map(productCategory => html`
           <div class="col-sm">
-            ${RadioComponent({ radioLabel: product, value: product, onChange: actions.changeState({ key: 'whatToBuy', value: product }), checked: props.buy.whatToBuy === product })}
+            ${RadioComponent({ radioLabel: productCategory, value: productCategory, onChange: actions.changeIntendedProductCategory({ productCategory }), checked: cart.intendedProduct.productCategory === productCategory })}
           </div>
         `)
       }
@@ -46,6 +48,7 @@ const AvaliableProductsContainer = {
 
 const mapDispatchToProps = {
   changeState: ({ key, value }) => () => store.dispatch(changeEntryState({ key, value })),
+  changeIntendedProductCategory: ({ productCategory }) => () => store.dispatch(changeIntendedProductCategory({ productCategory })),
 };
 
 const avaliableProducts = connectComponent(store, mapDispatchToProps, AvaliableProductsContainer);

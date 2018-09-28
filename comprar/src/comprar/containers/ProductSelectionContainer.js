@@ -21,25 +21,26 @@ const changeSelectedProduct = ({ key, event }) => {
   const { target } = event;
   const payload = {
     key,
-    value: target.value,
+    productValue: target.value,
     productName: target[target.selectedIndex].innerText,
   };
 };
 
-const renderSelect = ({ products, whatToBuy, onChange }) => {
+const renderSelect = ({ products, productCategory, onChange }) => {
   if (!Object.keys(products).length) {
     return html``;
   }
-  if (!whatToBuy) {
+  if (!productCategory) {
     return html``;
   }
-  if (!Object.keys(products[whatToBuy]).length) {
+  if (!Object.keys(products[productCategory]).length) {
     return html``;
   }
   return html`
   <select class="form-control" onchange=${onChange} >
-    ${Object.keys(products[whatToBuy]).map(productKey => html`
-      <option value=${products[whatToBuy][productKey]}>${productKey}</option>
+    <option value="" selected disabled hidden>Escolha um item</option>
+    ${Object.keys(products[productCategory]).map(productKey => html`
+      <option value=${products[productCategory][productKey]}>${productKey}</option>
     `)}
   </select>
   `;
@@ -52,11 +53,11 @@ const ProductSelectionContainer = {
   actions: {
     changeSelectedProduct: ({ key, value }) => console.log(key, value),
   },
-  render: ({ props, actions }) => html`
+  render: ({ props: { products, cart }, actions }) => html`
   <style>
     ${styles}
   </style>
-  ${renderSelect({ products: props.products.products, whatToBuy: props.buy.whatToBuy, onChange: (host, e) => actions.changeSelectedProduct({ key: 'selectedProduct', event: e }) })}
+  ${renderSelect({ products: products.products, productCategory: cart.intendedProduct.productCategory, onChange: (host, e) => actions.changeSelectedProduct({ key: 'selectedProduct', event: e }) })}
   <label for="inputEmail" class="sr-only">'Quantidade de bebida</label>
   <input type="text" id="drinkQuantity" class="form-control" placeholder="Quantidade de bebidas">
   `,

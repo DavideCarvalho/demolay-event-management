@@ -1,6 +1,7 @@
 import database from '../firebase';
 
 export const FETCH_PRODUCTS = 'FETCH_PRODUCTS';
+export const CHANGE_PRODUCT_ITEM = 'CHANGE_PRODUCT_ITEM';
 
 
 export const fetchProducts = () => async (dispatch) => {
@@ -19,5 +20,19 @@ export const fetchProducts = () => async (dispatch) => {
     Promise.resolve(productsData);
   } catch (error) {
     Promise.reject(error);
+  }
+};
+
+export const changeProductItem = ({ productName, productValue }) => async (dispatch) => {
+  try {
+    dispatch({
+      type: CHANGE_PRODUCT_ITEM,
+      payload: {
+        productName,
+        productValue,
+      },
+    });
+  } catch (e) {
+    console.log(e);
   }
 };
