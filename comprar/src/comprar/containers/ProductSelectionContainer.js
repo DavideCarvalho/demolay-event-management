@@ -1,6 +1,7 @@
 import { html, define } from 'hybrids';
 import store from '../../store';
 import { connectComponent } from '../../connect';
+import styles from '../css/bootstrap';
 
 
 /* <select value="" onchange="" class="form-control" id="selectedDrink">
@@ -15,7 +16,17 @@ import { connectComponent } from '../../connect';
   </select>
   <br /> */
 
-const renderSelect = ({ products, whatToBuy }) => {
+
+const changeSelectedProduct = ({ key, event }) => {
+  const { target } = event;
+  const payload = {
+    key,
+    value: target.value,
+    productName: target[target.selectedIndex].innerText,
+  };
+};
+
+const renderSelect = ({ products, whatToBuy, onChange }) => {
   if (!Object.keys(products).length) {
     return html``;
   }
@@ -26,7 +37,7 @@ const renderSelect = ({ products, whatToBuy }) => {
     return html``;
   }
   return html`
-  <select class="form-control">
+  <select class="form-control" onchange=${onChange} >
     ${Object.keys(products[whatToBuy]).map(productKey => html`
       <option value=${products[whatToBuy][productKey]}>${productKey}</option>
     `)}
@@ -39,14 +50,22 @@ const ProductSelectionContainer = {
     products: {},
   },
   actions: {
+    changeSelectedProduct: ({ key, value }) => console.log(key, value),
   },
-  render: ({ props }) => html`
-  ${renderSelect({ products: props.products.products, whatToBuy: props.buy.whatToBuy })}
+  render: ({ props, actions }) => html`
+  <style>
+    ${styles}
+  </style>
+  ${renderSelect({ products: props.products.products, whatToBuy: props.buy.whatToBuy, onChange: (host, e) => actions.changeSelectedProduct({ key: 'selectedProduct', event: e }) })}
   <label for="inputEmail" class="sr-only">'Quantidade de bebida</label>
   <input type="text" id="drinkQuantity" class="form-control" placeholder="Quantidade de bebidas">
   `,
 };
 
-const productSelection = connectComponent(store, {}, ProductSelectionContainer);
+const mapDispatchToProps = {
+  changeSelectedProduct: ({ key, event }) => changeSelectedProduct({ key, event }),
+};
+
+const productSelection = connectComponent(store, mapDispatchToProps, ProductSelectionContainer);
 
 define('app-product-selection', productSelection);
