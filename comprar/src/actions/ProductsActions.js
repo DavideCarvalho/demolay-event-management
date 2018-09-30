@@ -8,11 +8,21 @@ export const fetchProducts = () => async (dispatch) => {
   try {
     const productsRef = await database.collection('produtos').get();
     const productsDocs = productsRef.docs;
-    const productsData = productsDocs.reduce((products, productRef) => {
+    const productsData = await productsDocs.reduce(async (products, productRef) => {
+      const asyncProducts = await products;
       const productId = productRef.id;
       const productData = productRef.data();
-      return { ...products, [productId]: productData };
-    }, {});
+      const { valorPadrao } = productData;
+      const productItemsRef = await database.collection('produtos').doc(productId).collection('itens').get();
+      const productItemsDocs = productItemsRef.docs;
+      let productItems = productItemsDocs.reduce((allItems, productItem) => ({ ...allItems, [productItem.id]: productItem.data() }), {});
+      productItems = { ...productItems, valorPadrao: valorPadrao || 0 };
+      return {
+        ...asyncProducts,
+        [productId]: productItems,
+      };
+    }, Promise.resolve({}));
+    console.log(productsData);
     dispatch({
       type: FETCH_PRODUCTS,
       payload: productsData,

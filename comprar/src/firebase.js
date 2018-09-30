@@ -2,7 +2,7 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 
 const config = {
-  projectId: process.env.PROJECT_ID,
+  projectId: 'demolay-event-system',
   authDomain: process.env.AUTH_DOMAIN,
   apiKey: process.env.API_KEY,
 };
